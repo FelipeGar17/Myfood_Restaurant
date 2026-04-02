@@ -1,0 +1,61 @@
+# Especifica la versión de la sintaxis de Docker Compose. La versión "3.8" es moderna y estable.
+version: '3.8'
+
+# Define los servicios (contenedores) que compondrán nuestra aplicación.
+services:
+  # El servicio para nuestra aplicación backend.
+  app:
+    # Le dice a Docker Compose que construya la imagen para este servicio.
+    build:
+      # El contexto de construcción es el directorio 'BACKEND'.
+      # Docker buscará un 'Dockerfile' dentro de esta carpeta.
+      context: ./BACKEND
+      dockerfile: Dockerfile
+    # Reinicia el contenedor automáticamente si se detiene, a menos que se detenga manualmente.
+    # Útil para asegurar que la aplicación siempre esté corriendo.
+    restart: unless-stopped
+    # Mapea el puerto 3000 del contenedor al puerto 3000 de la máquina anfitriona (tu PC).
+    # Esto nos permite acceder a la API desde nuestro navegador o Postman en 'http://localhost:3000'.
+    ports:
+      - "3000:3000"
+    # Monta el código fuente del backend en el contenedor.
+    # Esto significa que cualquier cambio que hagas en tu código en VS Code se reflejará instantáneamente
+    # dentro del contenedor sin necesidad de reconstruir la imagen. Ideal para desarrollo.
+    volumes:
+      - ./BACKEND:/usr/src/app
+      # También excluimos 'node_modules' del montaje para usar la que se instaló dentro del contenedor.
+      # Esto evita conflictos de dependencias entre tu sistema operativo y el del contenedor.
+      - /usr/src/app/node_modules
+    # Define las variables de entorno que estarán disponibles para la aplicación.
+    environment:
+      # La URL de conexión a MongoDB.
+      # 'mongodb://mongo:27017/myfood' significa:
+      # - 'mongodb://': El protocolo de conexión.
+      # - 'mongo': El nombre del host. Docker Compose crea una red interna y permite que los servicios
+      #            se comuniquen usando sus nombres de servicio como si fueran nombres de dominio.
+      # - '27017': El puerto por defecto de MongoDB.
+      # - '/myfood': El nombre de la base de datos que se creará o usará.
+      MONGO_URI: mongodb://mongo:27017/myfood
+      PORT: 3000
+    # Especifica que el servicio 'app' depende del servicio 'mongo'.
+    # Docker Compose se asegurará de que el contenedor de 'mongo' se inicie antes que el de 'app'.
+    depends_on:
+      - mongo
+
+  # El servicio para nuestra base de datos MongoDB.
+  mongo:
+    # Usa la imagen oficial de MongoDB desde Docker Hub.
+    image: mongo:latest
+    # Mapea el puerto 27017 del contenedor al puerto 27017 de la máquina anfitriona.
+    # Esto nos permitiría conectarnos a la base de datos desde una herramienta externa si fuera necesario.
+    ports:
+      - "27017:27017"
+    # Define un volumen para persistir los datos de la base de datos.
+    # 'mongo-data' es un volumen nombrado gestionado por Docker.
+    # Esto asegura que si el contenedor de MongoDB se detiene o se elimina, los datos no se perderán.
+    volumes:
+      - mongo-data:/data/db
+
+# Define los volúmenes nombrados que usan los servicios.
+volumes:
+  mongo-data:

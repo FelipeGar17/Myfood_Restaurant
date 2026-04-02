@@ -1,0 +1,20 @@
+{
+    "name": "myfood-backend",
+    "version": "1.0.0",
+    "description": "Backend para el sistema de restaurante MyFood.",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js"
+    },
+    "author": "FelipeGar17",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.19.2",
+        "mongoose": "^8.4.1",
+        "dotenv": "^16.4.5"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.3"
+    }
+}
