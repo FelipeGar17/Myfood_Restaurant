@@ -5,7 +5,7 @@ const connectDB = async () => {
   try {
     // Obtenemos la URL de conexión desde las variables de entorno
     // que definimos en nuestro docker-compose.yml
-    const mongoURI = process.env.MONGO_URI;
+    const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/myfood';
 
     // Mongoose se conectará a la base de datos.
     // La opción { useNewUrlParser: true, useUnifiedTopology: true } ya no son necesarias
@@ -18,7 +18,7 @@ const connectDB = async () => {
   } catch (error) {
     // Si hay un error en la conexión, lo mostramos en la consola.
     console.error(`Error en la conexión a MongoDB: ${error.message}`);
-    
+
     // Y terminamos la ejecución de la aplicación, porque sin base de datos, no puede funcionar.
     process.exit(1);
   }

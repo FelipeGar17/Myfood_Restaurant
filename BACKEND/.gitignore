@@ -3,6 +3,7 @@
 
 # Production
 /build
+/public/qrs
 
 # Miscellaneous
 .DS_Store
