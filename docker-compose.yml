@@ -23,6 +23,7 @@ services:
     # dentro del contenedor sin necesidad de reconstruir la imagen. Ideal para desarrollo.
     volumes:
       - ./BACKEND:/usr/src/app
+      - ./FRONTEND:/usr/src/FRONTEND
       # También excluimos 'node_modules' del montaje para usar la que se instaló dentro del contenedor.
       # Esto evita conflictos de dependencias entre tu sistema operativo y el del contenedor.
       - /usr/src/app/node_modules
